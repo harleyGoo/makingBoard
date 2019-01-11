@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.mycom.mybatis0110.dao.BoardMapper">
+  
+  	<!-- 게시글 등록하기 -->
+  	<insert id="insertBoard" parameterType="Board">
+  		INSERT INTO BOARDINFO
+  		(BOARDSEQ, ID, BOARDTITLE, BOARDCONTENT, HITCOUNT, INDATE)
+  		VALUES 
+  		(boardseq.nextval, #{id}, #{boardtitle}, #{boardcontent}, 0, sysdate)
+  	</insert>
+  	
+  	<!-- 조회수 증가시키기 -->
+  	<update id="increaseHit" parameterType="String">
+  		UPDATE BOARDINFO
+  		SET HITCOUNT=HITCOUNT+1
+  		WHERE BOARDSEQ=#{boardseq}  		
+  	</update>
+  	
+  	<!-- 자기 아이디로 들어갔을 때 게시글 수정하기 -->
+  	<update id="updateContent" parameterType="Board">
+  		update boardinfo
+  		set BOARDTITLE=#{boardtitle}, BOARDCONTENT=#{boardcontent}
+  		where boardseq=#{boardseq}
+  	</update>
+  	
+  	<!-- 게시글 전체 출력하기 -->
+  	<select id="boardList" resultType="Board">
+  		select BOARDSEQ, ID, BOARDTITLE, BOARDCONTENT, HITCOUNT, INDATE
+  		from boardinfo
+  		order by indate desc
+  	</select>
+  	
+  	<!-- 게시글 시퀀스로 검색하기 -->
+  	<select id="boardDetail" resultType="Board" parameterType="String">
+  		select BOARDSEQ, ID, BOARDTITLE, BOARDCONTENT, HITCOUNT, INDATE
+  		from boardinfo
+  		where boardseq= #{boardseq}
+  	</select>
+  	
+  	<!-- 자기 아이디로 들어갔을 때 게시글 삭제하기 -->
+  	<delete id="deleteBoard" parameterType="String">
+  		DELETE BOARDINFO
+  		WHERE BOARDSEQ= #{boardseq} 
+  		<!-- delete
+  		from boardinfo
+  		where boardseq= #{boardseq} -->
+  	</delete>
+  </mapper>
